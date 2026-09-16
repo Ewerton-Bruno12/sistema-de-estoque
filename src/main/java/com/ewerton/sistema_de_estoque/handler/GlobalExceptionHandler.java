@@ -1,5 +1,6 @@
 package com.ewerton.sistema_de_estoque.handler;
 
+import com.ewerton.sistema_de_estoque.exception.CategoryNameAlreadyExistsException;
 import com.ewerton.sistema_de_estoque.exception.CategoryNotEmptyException;
 import com.ewerton.sistema_de_estoque.exception.InsufficientStockException;
 import com.ewerton.sistema_de_estoque.exception.ResourceNotFoundException;
@@ -52,6 +53,19 @@ public class GlobalExceptionHandler {
 
         return problemDetail;
     }
+
+    @ExceptionHandler(CategoryNameAlreadyExistsException.class)
+    public ProblemDetail handleCategoryNameAlreadyExists(CategoryNameAlreadyExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                ex.getMessage()
+        );
+        problemDetail.setTitle("Conflito de Cadastro");
+        problemDetail.setProperty("timestamp", Instant.now());
+
+        return problemDetail;
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationError(MethodArgumentNotValidException ex) {
