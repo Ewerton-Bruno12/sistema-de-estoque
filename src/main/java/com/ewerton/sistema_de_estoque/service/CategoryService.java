@@ -47,7 +47,6 @@ public class CategoryService {
                 .build();
 
         CategoryEntity savedCategory = categoryRepository.save(newCategory);
-
         return toDto(savedCategory);
     }
 
