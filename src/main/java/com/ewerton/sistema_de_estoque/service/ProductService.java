@@ -39,9 +39,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponseDto> findByCategoryId(Long id) {
-        CategoryEntity category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Categoria não encontrada com o ID: " + id));
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Categoria não encontrada com o ID: " + id);
+        }
 
         return productRepository.findByCategoryId(id)
                 .stream()
@@ -86,7 +86,7 @@ public class ProductService {
         return toDto(updatedProduct);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void delete(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado."));
