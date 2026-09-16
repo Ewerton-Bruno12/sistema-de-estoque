@@ -4,6 +4,7 @@ import com.ewerton.sistema_de_estoque.dto.ProductRequestDto;
 import com.ewerton.sistema_de_estoque.dto.ProductResponseDto;
 import com.ewerton.sistema_de_estoque.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequestMapping("v1/products")
 @RequiredArgsConstructor
 @Validated
-public class ProductControler {
+public class ProductController {
 
     private final ProductService productService;
 
@@ -53,5 +54,17 @@ public class ProductControler {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
         productService.delete(id);
+    }
+
+    @PatchMapping("/add-stock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseDto addStock(@PathVariable Long id, @RequestParam @Positive(message = "A quantidade deve ser maior que zero") Integer quantity) {
+        return productService.addStock(id, quantity);
+    }
+
+    @PatchMapping("/remove-stock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseDto removeStock(@PathVariable Long id, @RequestParam @Positive(message = "A quantidade deve ser maior que zero") Integer quantity) {
+        return productService.removeStock(id, quantity);
     }
 }
