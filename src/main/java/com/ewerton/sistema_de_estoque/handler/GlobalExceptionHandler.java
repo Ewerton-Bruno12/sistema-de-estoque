@@ -4,9 +4,12 @@ import com.ewerton.sistema_de_estoque.exception.CategoryNameAlreadyExistsExcepti
 import com.ewerton.sistema_de_estoque.exception.CategoryNotEmptyException;
 import com.ewerton.sistema_de_estoque.exception.InsufficientStockException;
 import com.ewerton.sistema_de_estoque.exception.ResourceNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -66,6 +69,17 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage()
+        );
+        problemDetail.setTitle("Parâmetro Inválido");
+        problemDetail.setProperty("timestamp", Instant.now());
+
+        return problemDetail;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationError(MethodArgumentNotValidException ex) {
