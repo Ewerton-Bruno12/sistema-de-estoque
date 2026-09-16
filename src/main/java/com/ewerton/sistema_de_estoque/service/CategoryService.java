@@ -66,7 +66,7 @@ public class CategoryService {
         return toDto(updatedCategory);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void delete(Long id) {
         CategoryEntity categoryEntity = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada."));
