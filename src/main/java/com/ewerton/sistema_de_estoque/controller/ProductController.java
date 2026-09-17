@@ -67,4 +67,5 @@ public class ProductController {
     public ProductResponseDto removeStock(@PathVariable Long id, @RequestParam @Positive(message = "A quantidade deve ser maior que zero") Integer quantity) {
         return productService.removeStock(id, quantity);
     }
+
 }
